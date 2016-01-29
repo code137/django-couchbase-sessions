@@ -23,7 +23,7 @@ class SessionStore(SessionBase):
             session_data = self.server.get(
                 self._get_or_create_session_key()
             )
-            return self.decode(force_unicode(session_data.value))
+            return session_data.value
         except:
             self._session_key = None
             return {}
@@ -45,13 +45,13 @@ class SessionStore(SessionBase):
         if must_create and self.exists(self._get_or_create_session_key()):
             raise CreateError
         if must_create:
-            data = self.encode(self._get_session(no_load=must_create))
+            data = self._get_session(no_load=must_create)
             self.server.insert(
                 self._get_or_create_session_key(),
                 data
             )
         else:
-            data = self.encode(self._get_session(no_load=must_create))
+            data = self._get_session(no_load=must_create)
             self.server.replace(
                 self._get_or_create_session_key(),
                 data
